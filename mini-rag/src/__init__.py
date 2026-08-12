@@ -16,3 +16,15 @@ from .indexer import (
     chunk_documents as chunk_documents,
     load_corpus as load_corpus
 )
+
+from .retriever import (
+    get_vector_store as get_vector_store,
+    retrieve_relevant_documents as retrieve_relevant_documents,
+)
+
+from .main import (
+    format_docs as format_docs,
+    build_rag_chain as build_rag_chain,
+    generate_answer as generate_answer,
+)
+
