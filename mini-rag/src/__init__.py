@@ -7,6 +7,8 @@ from .config import (
     DATASET_NAME as DATASET_NAME,
     DATASET_SPLIT as DATASET_SPLIT,
     EMBEDDING_MODEL as EMBEDDING_MODEL,
+    TOP_K as TOP_K,
+    LLM_TEMPERATURE as LLM_TEMPERATURE,
 )
 
 from .indexer import (

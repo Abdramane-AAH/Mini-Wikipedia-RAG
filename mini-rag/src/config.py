@@ -19,6 +19,10 @@ CHROMA_PATH = "data/chroma_db"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 COLLECTION_NAME = "mini_wikipedia"
 
+# Retriever Hyperparameters
+TOP_K = 3
+
 # Ollama LLM Config
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 OLLAMA_MODEL = "llama3.2" 
+LLM_TEMPERATURE = 0.0
