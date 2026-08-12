@@ -1,0 +1,12 @@
+setup.py
+mini_rag.egg-info/PKG-INFO
+mini_rag.egg-info/SOURCES.txt
+mini_rag.egg-info/dependency_links.txt
+mini_rag.egg-info/top_level.txt
+src/__init__.py
+src/config.py
+src/indexer.py
+src/main.py
+src/retriever.py
+tests/__init__.py
+tests/test_indexer.py
