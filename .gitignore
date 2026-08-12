@@ -4,3 +4,5 @@ __pycache__/
 .env
 data/chroma_db/
 .DS_Store
+.pytest_cache
+mini_rag.egg-info

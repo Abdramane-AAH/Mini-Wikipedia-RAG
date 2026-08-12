@@ -10,6 +10,10 @@ DATASET_NAME = "rag-datasets/rag-mini-wikipedia"
 DATASET_CONFIG = "text-corpus"
 DATASET_SPLIT = "passages"
 
+# Chunking Hyperparameters
+CHUNK_SIZE = 500
+CHUNK_OVERLAP = 50
+
 # Vector Store & Embeddings
 CHROMA_PATH = "data/chroma_db"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
