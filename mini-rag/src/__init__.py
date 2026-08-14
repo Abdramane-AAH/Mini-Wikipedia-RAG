@@ -9,12 +9,13 @@ from .config import (
     EMBEDDING_MODEL as EMBEDDING_MODEL,
     TOP_K as TOP_K,
     LLM_TEMPERATURE as LLM_TEMPERATURE,
+    RERANKER_MODEL as RERANKER_MODEL,
 )
 
 from .indexer import (
-    build_vector_store as build_vector_store,
     chunk_documents as chunk_documents,
-    load_corpus as load_corpus
+    load_corpus as load_corpus,
+    build_vector_store_batched as build_vector_store_batched,
 )
 
 from .retriever import (
