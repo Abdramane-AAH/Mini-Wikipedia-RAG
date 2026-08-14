@@ -16,8 +16,11 @@ CHUNK_OVERLAP = 50
 
 # Vector Store & Embeddings
 CHROMA_PATH = "data/chroma_db"
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
 COLLECTION_NAME = "mini_wikipedia"
+
+# Reranker Model
+RERANKER_MODEL = "BAAI/bge-reranker-base"
 
 # Retriever Hyperparameters
 TOP_K = 3

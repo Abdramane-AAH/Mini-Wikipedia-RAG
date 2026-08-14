@@ -3,8 +3,9 @@ from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from tqdm import tqdm
 
-from .config import (
+from src.config import (
     CHUNK_OVERLAP,
     CHUNK_SIZE,
     CHROMA_PATH,
@@ -16,16 +17,16 @@ from .config import (
 )
 
 
-def load_corpus(limit: int = 100) -> list[Document]:
-    """Load passages from Hugging Face dataset and convert to LangChain Documents"""
-    dataset = load_dataset(DATASET_NAME, DATASET_CONFIG, split=DATASET_SPLIT)
+def load_corpus(limit: int | None = None) -> list[Document]:
+    """Load passages from Hugging Face dataset. If limit is None, loads the entire corpus"""
+    ds = load_dataset(DATASET_NAME, DATASET_CONFIG, split=DATASET_SPLIT)
+    if limit is not None:
+        ds = ds.select(range(min(limit, len(ds))))
     documents = []
-    subset = dataset.select(range(min(limit, len(dataset))))
-
-    for item in subset:
+    for item in ds:
         doc = Document(
             page_content=item["passage"],
-            metadata={"id": str(item["id"]), "title": item.get("title", "")},
+            metadata={"id": str(item["id"])},
         )
         documents.append(doc)
 
@@ -33,7 +34,7 @@ def load_corpus(limit: int = 100) -> list[Document]:
 
 
 def chunk_documents(documents: list[Document]) -> list[Document]:
-    """Split documents into smaller chunks for RAG based on config parameters"""
+    """Split documents into smaller chunks based on config parameters"""
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
@@ -41,21 +42,28 @@ def chunk_documents(documents: list[Document]) -> list[Document]:
     return splitter.split_documents(documents)
 
 
-def build_vector_store(
-    documents: list[Document], chroma_path: str = CHROMA_PATH
+def build_vector_store_batched(
+    documents: list[Document], 
+    chroma_path: str = CHROMA_PATH, 
+    batch_size: int = 500
 ) -> Chroma:
-    """Generate embeddings and index documents in a local ChromaDB instance"""
+    """Generate embeddings and index documents in ChromaDB in batches to conserve RAM"""
     embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
+    first_batch = documents[:batch_size]
     vector_store = Chroma.from_documents(
-        documents=documents,
+        documents=first_batch,
         embedding=embeddings,
         collection_name=COLLECTION_NAME,
         persist_directory=chroma_path,
     )
+    for i in tqdm(range(batch_size, len(documents), batch_size), desc="Indexing Batches"):
+        batch = documents[i : i + batch_size]
+        vector_store.add_documents(batch)
+        
     return vector_store
 
 
 if __name__ == "__main__":
-    raw_docs = load_corpus(limit=500)
+    raw_docs = load_corpus(limit=None)
     chunked_docs = chunk_documents(raw_docs)
-    build_vector_store(chunked_docs)
+    build_vector_store_batched(chunked_docs)
